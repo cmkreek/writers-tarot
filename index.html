@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Writer's Tarot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --off-white: #f5f3f0;
+            --dark-grey: #282828;
+            --gold: #a9844e;
+            --gold-light: #c9a66e;
+            --gold-dark: #8a6a3e;
+            --blue: #494d6f;
+            --blue-light: #5a5f82;
+            --deep-pink: #993b57;
+            --deep-pink-light: #b04a68;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: var(--off-white);
+            color: var(--dark-grey);
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+        }
+
+        /* Geometric pattern inspired by card back */
+        .geometric-border {
+            position: relative;
+        }
+
+        .geometric-border::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--gold) 0px,
+                var(--gold) 20px,
+                transparent 20px,
+                transparent 25px,
+                var(--dark-grey) 25px,
+                var(--dark-grey) 45px,
+                transparent 45px,
+                transparent 50px
+            );
+        }
+
+        /* ============ HERO BANNER ============ */
+        .hero-banner {
+            background-color: var(--dark-grey);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Plain background - no pattern */
+        .hero-banner::before {
+            display: none;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 900px;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            color: var(--white);
+            letter-spacing: 0.08em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero-title span {
+            color: var(--gold);
+        }
+
+        .hero-tagline {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            color: var(--gold-light);
+            font-style: italic;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .hero-audience {
+            font-size: 0.9rem;
+            color: #999;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 50px;
+        }
+
+        /* ============ CARD CAROUSEL ============ */
+        .card-carousel-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            height: 420px;
+            perspective: 1500px;
+        }
+
+        .card-carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-wrapper {
+            position: absolute;
+            width: 220px;
+            height: 380px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .card-wrapper.flipping .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-front img,
+        .card-back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Card positions */
+        .card-wrapper:nth-child(1) { transform: translateX(-320px) scale(0.7); opacity: 0.4; z-index: 1; }
+        .card-wrapper:nth-child(2) { transform: translateX(-160px) scale(0.85); opacity: 0.7; z-index: 2; }
+        .card-wrapper:nth-child(3) { transform: translateX(0) scale(1); opacity: 1; z-index: 3; }
+        .card-wrapper:nth-child(4) { transform: translateX(160px) scale(0.85); opacity: 0.7; z-index: 2; }
+        .card-wrapper:nth-child(5) { transform: translateX(320px) scale(0.7); opacity: 0.4; z-index: 1; }
+
+        /* Hidden cards */
+        .card-wrapper.hidden-left { transform: translateX(-500px) scale(0.5); opacity: 0; z-index: 0; }
+        .card-wrapper.hidden-right { transform: translateX(500px) scale(0.5); opacity: 0; z-index: 0; }
+
+        /* Carousel navigation */
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-dot.active {
+            background-color: var(--gold);
+            transform: scale(1.2);
+        }
+
+        .carousel-dot:hover {
+            background-color: var(--gold-light);
+        }
+
+        /* Gold decorative line */
+        .gold-divider {
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 40px auto;
+        }
+
+        /* ============ MAIN CONTENT ============ */
+        .main-content {
+            padding: 80px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: var(--dark-grey);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .intro-text {
+            font-size: 1.15rem;
+            text-align: center;
+            color: #555;
+            max-width: 750px;
+            margin: 0 auto 40px;
+        }
+
+        /* Uses list */
+        .uses-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            list-style: none;
+            margin: 40px 0;
+        }
+
+        .uses-list li {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: var(--blue);
+            position: relative;
+            padding: 8px 30px;
+            transition: all 0.3s ease;
+        }
+
+        .uses-list li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-size: 0.6rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .uses-list li:hover {
+            color: var(--deep-pink);
+            transform: translateX(5px);
+        }
+
+        .uses-list li:last-child {
+            font-style: italic;
+            color: var(--deep-pink);
+        }
+
+        /* Booklet section */
+        .booklet-section {
+            background-color: var(--dark-grey);
+            padding: 80px 20px;
+            margin-top: 60px;
+        }
+
+        .booklet-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        @media (min-width: 768px) {
+            .booklet-container {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+
+        .booklet-text {
+            flex: 1;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .booklet-text {
+                text-align: left;
+            }
+        }
+
+        .booklet-text h2 {
+            font-size: 1.8rem;
+            color: var(--white);
+            margin-bottom: 20px;
+        }
+
+        .booklet-text h2 span {
+            color: var(--gold);
+        }
+
+        .booklet-text p {
+            color: #bbb;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .booklet-image {
+            flex: 1;
+            max-width: 450px;
+        }
+
+        .booklet-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ============ PICK A CARD SECTION ============ */
+        .pick-card-section {
+            padding: 80px 20px;
+            background-color: var(--off-white);
+            text-align: center;
+        }
+
+        .pick-card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            color: var(--dark-grey);
+            margin-bottom: 10px;
+        }
+
+        .pick-card-title span {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .pick-card-subtitle {
+            color: #777;
+            margin-bottom: 50px;
+            font-size: 1rem;
+        }
+
+        .pick-card-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        @media (min-width: 768px) {
+            .pick-card-container {
+                flex-direction: row;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 60px;
+            }
+        }
+
+        /* Card deck stack */
+        .deck-area {
+            position: relative;
+            width: 220px;
+            height: 380px;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        .deck-stack {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .deck-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .deck-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Stack offset effect */
+        .deck-card:nth-child(1) { transform: translate(0, 0) rotate(0deg); }
+        .deck-card:nth-child(2) { transform: translate(3px, -3px) rotate(0.5deg); }
+        .deck-card:nth-child(3) { transform: translate(6px, -6px) rotate(1deg); }
+        .deck-card:nth-child(4) { transform: translate(9px, -9px) rotate(1.5deg); }
+        .deck-card:nth-child(5) { transform: translate(12px, -12px) rotate(2deg); }
+
+        .deck-area:hover .deck-card:nth-child(5) {
+            transform: translate(12px, -20px) rotate(2deg);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .deck-prompt {
+            margin-top: 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--blue);
+            font-style: italic;
+        }
+
+        /* Revealed card area */
+        .revealed-card-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 280px;
+        }
+
+        .revealed-card-wrapper {
+            width: 220px;
+            height: 380px;
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+
+        .revealed-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .revealed-card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .revealed-card-front,
+        .revealed-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .revealed-card-front img,
+        .revealed-card-back img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .revealed-card-back {
+            transform: rotateY(180deg);
+        }
+
+        .revealed-card-wrapper.empty {
+            background: linear-gradient(135deg, #e8e6e3 0%, #d5d3d0 100%);
+            border: 2px dashed var(--gold);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-prompt {
+            font-family: 'Cormorant Garamond', serif;
+            color: #999;
+            font-style: italic;
+            font-size: 1.1rem;
+            padding: 20px;
+        }
+
+        /* Card interpretation */
+        .card-interpretation {
+            text-align: center;
+            max-width: 280px;
+            width: 100%;
+        }
+
+        .card-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--dark-grey);
+            margin-bottom: 15px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .card-name.visible {
+            opacity: 1;
+        }
+
+        .card-description {
+            color: #666;
+            line-height: 1.6;
+            opacity: 0;
+            transition: opacity 0.5s ease 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .card-description.visible {
+            opacity: 1;
+        }
+
+        .interpret-btn,
+        .draw-again-btn {
+            margin-top: 15px;
+            padding: 12px 30px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .interpret-btn.visible,
+        .draw-again-btn.visible {
+            opacity: 1;
+        }
+
+        .interpret-btn:hover,
+        .draw-again-btn:hover {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        .interpret-btn {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        .interpret-btn:hover {
+            background: var(--gold-dark);
+        }
+
+        /* ============ MODAL ============ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: var(--off-white);
+            max-width: 800px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+            padding: 40px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            border: none;
+            background: transparent;
+            color: var(--dark-grey);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .modal-close:hover {
+            color: var(--gold);
+        }
+
+        .modal-card-image {
+            width: 180px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin: 0 auto 30px;
+            display: block;
+        }
+
+        .modal-card-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            color: var(--dark-grey);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .modal-card-subtitle {
+            font-size: 1.1rem;
+            color: var(--gold);
+            font-weight: 400;
+            margin-bottom: 30px;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .modal-card-description {
+            color: #666;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Scrollbar for modal */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: var(--gold-dark);
+        }
+
+        /* ============ SIGNUP SECTION ============ */
+        .signup-section {
+            padding: 80px 20px;
+            background-color: #e8e6e3;
+            text-align: center;
+        }
+
+        .signup-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .signup-logo {
+            height: 140px;
+            width: auto;
+            margin: 0 auto 30px;
+            display: block;
+            filter: invert(1);
+        }
+
+        .signup-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            color: var(--dark-grey);
+            margin-bottom: 20px;
+        }
+
+        .signup-title span {
+            color: var(--gold);
+        }
+
+        .signup-intro {
+            color: #666;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .signup-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .signup-buttons {
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        .signup-btn {
+            padding: 15px 30px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            min-width: 250px;
+        }
+
+        .primary-btn {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        .primary-btn:hover {
+            background: var(--gold-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(169, 132, 78, 0.3);
+        }
+
+        .secondary-btn {
+            background: transparent;
+            color: var(--blue);
+            border: 2px solid var(--blue);
+        }
+
+        .secondary-btn:hover {
+            background: var(--blue);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* ============ SIGNUP FORMS ============ */
+        .signup-form {
+            max-width: 450px;
+            margin: 30px auto 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--dark-grey);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: 'Raleway', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .form-submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gold);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            font-family: 'Raleway', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .form-submit-btn:hover {
+            background: var(--gold-dark);
+        }
+
+        .form-thank-you {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .form-thank-you h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .form-thank-you p {
+            color: #666;
+            line-height: 1.7;
+        }
+
+        /* ============ FOOTER ============ */
+        footer {
+            background-color: var(--black);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+            margin-bottom: 15px;
+        }
+
+        .footer-text {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        /* Decorative corner elements */
+        .corner-decoration {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            opacity: 0.15;
+        }
+
+        .corner-decoration.top-left {
+            top: 20px;
+            left: 20px;
+            border-top: 2px solid var(--gold);
+            border-left: 2px solid var(--gold);
+        }
+
+        .corner-decoration.top-right {
+            top: 20px;
+            right: 20px;
+            border-top: 2px solid var(--gold);
+            border-right: 2px solid var(--gold);
+        }
+
+        .corner-decoration.bottom-left {
+            bottom: 20px;
+            left: 20px;
+            border-bottom: 2px solid var(--gold);
+            border-left: 2px solid var(--gold);
+        }
+
+        .corner-decoration.bottom-right {
+            bottom: 20px;
+            right: 20px;
+            border-bottom: 2px solid var(--gold);
+            border-right: 2px solid var(--gold);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .card-carousel-container {
+                height: 350px;
+            }
+
+            .card-wrapper {
+                width: 160px;
+                height: 280px;
+            }
+
+            .card-wrapper:nth-child(1) { transform: translateX(-180px) scale(0.7); }
+            .card-wrapper:nth-child(2) { transform: translateX(-90px) scale(0.85); }
+            .card-wrapper:nth-child(3) { transform: translateX(0) scale(1); }
+            .card-wrapper:nth-child(4) { transform: translateX(90px) scale(0.85); }
+            .card-wrapper:nth-child(5) { transform: translateX(180px) scale(0.7); }
+
+            .card-wrapper.hidden-left { transform: translateX(-280px) scale(0.5); }
+            .card-wrapper.hidden-right { transform: translateX(280px) scale(0.5); }
+        }
+
+        @media (max-width: 500px) {
+            .card-wrapper:nth-child(1),
+            .card-wrapper:nth-child(5) {
+                opacity: 0;
+            }
+
+            .card-wrapper:nth-child(2) { transform: translateX(-70px) scale(0.8); }
+            .card-wrapper:nth-child(4) { transform: translateX(70px) scale(0.8); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Banner -->
+    <section class="hero-banner">
+        <div class="corner-decoration top-left"></div>
+        <div class="corner-decoration top-right"></div>
+        <div class="corner-decoration bottom-left"></div>
+        <div class="corner-decoration bottom-right"></div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">The Writer's <span>Tarot</span></h1>
+            <p class="hero-tagline">Pick a card and push past writer's block.</p>
+            <p class="hero-audience">Designed for students, teachers, and non-fiction writers, age 13+</p>
+        </div>
+
+        <div class="card-carousel-container">
+            <div class="card-carousel" id="cardCarousel">
+                <!-- Cards will be inserted by JavaScript -->
+            </div>
+        </div>
+
+        <div class="carousel-nav" id="carouselNav">
+            <!-- Dots will be inserted by JavaScript -->
+        </div>
+
+        <div class="gold-divider"></div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="section">
+            <h2 class="section-title">Fortune Telling for Your Next Great Paper</h2>
+            <p class="intro-text">
+                Select a card from this tarot-inspired deck to spark creative ideas and stimulate critical thinking.
+                Each of the 43 cards facilitates brainstorming, analysis, and organization for a broad range of non-fiction writing projects:
+            </p>
+
+            <ul class="uses-list">
+                <li>English Essays</li>
+                <li>History Papers</li>
+                <li>Application Essays</li>
+                <li>Memoir &amp; Personal Essays</li>
+                <li>Journaling</li>
+                <li>Blog Posts</li>
+                <li>And So Much More</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Booklet Section -->
+    <section class="booklet-section">
+        <div class="booklet-container">
+            <div class="booklet-text">
+                <h2>Includes a <span>96-Page</span> User Guide</h2>
+                <p>
+                    Each deck comes with a beautifully designed, full-color guidebook featuring
+                    specific prompts and exercises for every card. Learn how to use the deck
+                    to unlock new perspectives and craft better prose.
+                </p>
+            </div>
+            <div class="booklet-image">
+                <img src="images/booklet/book_image_placeholder.png" alt="Writer's Tarot Guidebook">
+            </div>
+        </div>
+    </section>
+
+    <!-- Pick a Card Section -->
+    <section class="pick-card-section">
+        <h2 class="pick-card-title">Try It... <span>Pick a Card</span></h2>
+        <p class="pick-card-subtitle">Click on the deck to draw a random card</p>
+
+        <div class="pick-card-container">
+            <!-- Deck Stack -->
+            <div class="deck-wrapper">
+                <div class="deck-area" id="deckArea">
+                    <div class="deck-stack">
+                        <div class="deck-card"><img src="images/cards/cardbackprototype copy.png" alt="Card Back"></div>
+                        <div class="deck-card"><img src="images/cards/cardbackprototype copy.png" alt="Card Back"></div>
+                        <div class="deck-card"><img src="images/cards/cardbackprototype copy.png" alt="Card Back"></div>
+                        <div class="deck-card"><img src="images/cards/cardbackprototype copy.png" alt="Card Back"></div>
+                        <div class="deck-card"><img src="images/cards/cardbackprototype copy.png" alt="Card Back"></div>
+                    </div>
+                </div>
+                <p class="deck-prompt">Click to draw</p>
+            </div>
+
+            <!-- Revealed Card Area -->
+            <div class="revealed-card-area">
+                <div class="revealed-card-wrapper empty" id="revealedCard">
+                    <span class="empty-prompt">Your card will appear here</span>
+                </div>
+
+                <div class="card-interpretation">
+                    <h3 class="card-name" id="cardName"></h3>
+                    <p class="card-description" id="cardDescription"></p>
+                    <button class="interpret-btn" id="interpretBtn">Interpret This Card</button>
+                    <button class="draw-again-btn" id="drawAgainBtn">Draw Another Card</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sign Up Section -->
+    <section class="signup-section">
+        <div class="signup-container">
+            <img src="images/feather_logo_justwhite.png" alt="Writer's Tarot Logo" class="signup-logo">
+            <h2 class="signup-title">Join Our <span>Testing Community</span></h2>
+            <p class="signup-intro">
+                This project is currently in the prototype phase. We are looking for students and writers, age 13+,
+                to test out the deck. Sign up for a 30 or 60 minute card-reading session to explore ideas for your next
+                real or hypothetical writing project.
+            </p>
+
+            <div class="signup-buttons">
+                <button class="signup-btn primary-btn" id="tryCardsBtn">Sign Up to Try the Cards</button>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLScYM7Jybupiw1Wu6J5cJG20A86h6XPGNmj523C-3WTSS7HSXQ/viewform?usp=sharing&ouid=104275387908560000756"
+                   target="_blank"
+                   class="signup-btn secondary-btn">Already Tested? Share Your Feedback</a>
+                <button class="signup-btn primary-btn" id="waitlistBtn">Like the Concept? Join Our Waitlist</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Try Cards Modal -->
+    <div class="modal-overlay" id="tryCardsModal">
+        <div class="modal-content">
+            <button class="modal-close" id="tryCardsClose">&times;</button>
+            <h2 class="modal-card-name">Sign Up to Try the Cards</h2>
+            <p class="modal-card-subtitle">We'll be in touch to schedule your session!</p>
+
+            <form class="signup-form" id="tryCardsForm" action="https://formspree.io/f/xnnqopqq" method="POST">
+                <input type="hidden" name="form_type" value="try_cards">
+                <div class="form-group">
+                    <label for="try-name">Name *</label>
+                    <input type="text" id="try-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="try-email">Email *</label>
+                    <input type="email" id="try-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="try-phone">Phone (optional)</label>
+                    <input type="tel" id="try-phone" name="phone">
+                </div>
+                <button type="submit" class="form-submit-btn">Submit</button>
+            </form>
+
+            <div class="form-thank-you" id="tryCardsThankYou" style="display: none;">
+                <h3>Thank You!</h3>
+                <p>We've received your sign-up and will be in touch soon to schedule your card-reading session.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Waitlist Modal -->
+    <div class="modal-overlay" id="waitlistModal">
+        <div class="modal-content">
+            <button class="modal-close" id="waitlistClose">&times;</button>
+            <h2 class="modal-card-name">Join Our Waitlist</h2>
+            <p class="modal-card-subtitle">Be the first to know when the deck is available for purchase!</p>
+
+            <form class="signup-form" id="waitlistForm" action="https://formspree.io/f/xnnqopqq" method="POST">
+                <input type="hidden" name="form_type" value="waitlist">
+                <div class="form-group">
+                    <label for="wait-name">Name *</label>
+                    <input type="text" id="wait-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="wait-email">Email *</label>
+                    <input type="email" id="wait-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="wait-phone">Phone (optional)</label>
+                    <input type="tel" id="wait-phone" name="phone">
+                </div>
+                <button type="submit" class="form-submit-btn">Submit</button>
+            </form>
+
+            <div class="form-thank-you" id="waitlistThankYou" style="display: none;">
+                <h3>Thank You!</h3>
+                <p>You've been added to our waitlist. We'll notify you as soon as the deck is available for purchase!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="cardModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <img class="modal-card-image" id="modalCardImage" src="" alt="">
+            <h2 class="modal-card-name" id="modalCardName"></h2>
+            <p class="modal-card-subtitle" id="modalCardSubtitle"></p>
+            <div class="modal-card-description" id="modalCardDescription"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p class="footer-logo">The Writer's Tarot</p>
+            <p class="footer-text">&copy; 2025 The Writer's Tarot. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Card data
+        const cards = [
+            { src: 'images/cards/3ThePathPrototypeBorder.png', name: 'The Path' },
+            { src: 'images/cards/5TheMirrorPrototypeBorder.png', name: 'The Mirror' },
+            { src: 'images/cards/6TheHoneybeePrototypeBorder.png', name: 'The Honeybee' },
+            { src: 'images/cards/8TheScalePrototypeBorder.png', name: 'The Scale' },
+            { src: 'images/cards/9ElephantInTheRoomPrototypeBorder.png', name: 'The Elephant' },
+            { src: 'images/cards/13GrainOfSandPrototypeBorder.png', name: 'Grain of Sand' },
+            { src: 'images/cards/15DevilsAdvocatePrototypeBorder.png', name: "Devil's Advocate" },
+            { src: 'images/cards/23EchoesPrototypeBorder.png', name: 'Echoes' },
+            { src: 'images/cards/25FoundationsPrototypeBorder.png', name: 'Foundations' },
+            { src: 'images/cards/30TheCriticPrototypeBorder.png', name: 'The Critic' },
+            { src: 'images/cards/33TheBoxPrototypeBorder.png', name: 'The Box' },
+            { src: 'images/cards/35TheOutlierPrototypeBorder.png', name: 'The Outlier' },
+            { src: 'images/cards/36TheWorldPrototypeBorder.png', name: 'The World' },
+            { src: 'images/cards/37TheFloodPrototypeBorder.png', name: 'The Flood' },
+            { src: 'images/cards/40DeathPrototypeBorder.png', name: 'Death' }
+        ];
+
+        const cardBack = 'images/cards/cardbackprototype copy.png';
+        let currentIndex = 0;
+        let isAnimating = false;
+
+        // Initialize carousel
+        function initCarousel() {
+            const carousel = document.getElementById('cardCarousel');
+            const nav = document.getElementById('carouselNav');
+
+            // Create card elements
+            cards.forEach((card, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'card-wrapper';
+                wrapper.dataset.index = index;
+
+                wrapper.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <img src="${card.src}" alt="${card.name}">
+                        </div>
+                        <div class="card-back">
+                            <img src="${cardBack}" alt="Card Back">
+                        </div>
+                    </div>
+                `;
+
+                wrapper.addEventListener('click', () => handleCardClick(index));
+                carousel.appendChild(wrapper);
+            });
+
+            // Create navigation dots
+            cards.forEach((_, index) => {
+                const dot = document.createElement('button');
+                dot.className = 'carousel-dot' + (index === 0 ? ' active' : '');
+                dot.addEventListener('click', () => goToCard(index));
+                nav.appendChild(dot);
+            });
+
+            updateCarousel();
+        }
+
+        // Handle card click
+        function handleCardClick(index) {
+            if (isAnimating) return;
+
+            const wrapper = document.querySelector(`.card-wrapper[data-index="${index}"]`);
+
+            if (index === currentIndex) {
+                // Flip the center card
+                isAnimating = true;
+                wrapper.classList.add('flipping');
+
+                setTimeout(() => {
+                    wrapper.classList.remove('flipping');
+                    isAnimating = false;
+                }, 1600);
+            } else {
+                // Navigate to clicked card
+                goToCard(index);
+            }
+        }
+
+        // Go to specific card
+        function goToCard(index) {
+            if (isAnimating || index === currentIndex) return;
+
+            isAnimating = true;
+            currentIndex = index;
+            updateCarousel();
+
+            setTimeout(() => {
+                isAnimating = false;
+            }, 800);
+        }
+
+        // Update carousel positions
+        function updateCarousel() {
+            const wrappers = document.querySelectorAll('.card-wrapper');
+            const dots = document.querySelectorAll('.carousel-dot');
+
+            wrappers.forEach((wrapper, index) => {
+                const offset = index - currentIndex;
+
+                // Reset classes
+                wrapper.classList.remove('hidden-left', 'hidden-right');
+
+                // Calculate position
+                let translateX, scale, opacity, zIndex;
+
+                if (offset === 0) {
+                    translateX = 0; scale = 1; opacity = 1; zIndex = 5;
+                } else if (offset === 1 || offset === -1) {
+                    translateX = offset * 160; scale = 0.85; opacity = 0.7; zIndex = 4;
+                } else if (offset === 2 || offset === -2) {
+                    translateX = offset * 160; scale = 0.7; opacity = 0.4; zIndex = 3;
+                } else {
+                    translateX = offset > 0 ? 500 : -500;
+                    scale = 0.5;
+                    opacity = 0;
+                    zIndex = 1;
+                    wrapper.classList.add(offset > 0 ? 'hidden-right' : 'hidden-left');
+                }
+
+                wrapper.style.transform = `translateX(${translateX}px) scale(${scale})`;
+                wrapper.style.opacity = opacity;
+                wrapper.style.zIndex = zIndex;
+            });
+
+            // Update dots
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        // Auto-rotate carousel
+        function startAutoRotate() {
+            setInterval(() => {
+                if (!isAnimating) {
+                    const nextIndex = (currentIndex + 1) % cards.length;
+                    goToCard(nextIndex);
+                }
+            }, 4000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initCarousel();
+            startAutoRotate();
+            initPickCard();
+        });
+
+        // ============ PICK A CARD FUNCTIONALITY ============
+
+        // Selected cards for random selection (cards 2, 5, 7, 9, 11, 19, 23, 25, 28, 33, 40, 41, 43)
+        const allCards = [
+            {
+                src: 'images/cards/2ThePondPrototypeBorder.png',
+                name: 'The Pond',
+                subtitle: 'Place, Setting, Nature, Home',
+                description: `<strong>PLACE:</strong> How does the pond shape the fish? Explore how your topic is determined by the social milieu and physical environment in which it is enmeshed. What similarities and differences would you find in other places, cultures, or times?<br><br><strong>SETTING:</strong> For literary or film analysis, examine the setting: location, time, geography, flora-and-fauna, weather, architecture, etc. How does the setting influence the plot, characters, and themes? Alternatively, for narrative writing, brainstorm your own setting, using specific details to create a mood and emphasize your themes.<br><br><strong>ENVIRONMENT:</strong> In the context of your topic, explore any theme related to place (e.g., home, community, nature, ecology).<br><br><em>Reversed: insular thinking, narrow-mindedness, prejudice</em>`
+            },
+            {
+                src: 'images/cards/5TheMirrorPrototypeBorder.png',
+                name: 'The Mirror',
+                subtitle: 'Personal Anecdotes, Self Reflection, Identity',
+                description: `<strong>MEMORIES:</strong> Make a list of at least three moments in your own life that are related to your topic. Select one of these moments to explore in more detail through freewriting or brainstorming.<br><br><strong>BIAS:</strong> What personal biases (both negative and positive assumptions) color your attitude towards your subject? What experiences shaped these biases?<br><br><strong>IDENTITY:</strong> In the context of your topic, explore any theme related to the self (e.g., identity, self-awareness, vanity, pride, shame, humility, hubris, self-actualization).<br><br><em>Reversed: bias, subjectivity, egoism, vanity</em>`
+            },
+            {
+                src: 'images/cards/7TheCrusaderPrototypeBorder.png',
+                name: 'The Crusader',
+                subtitle: 'Values, Purpose, Mission',
+                description: `<strong>DRIVE:</strong> Brainstorm five reasons you care about your topic. What drives you to write? Now rank your reasons in order of importance to you. How can you use this list to prioritize aspects of your project?<br><br><strong>PURPOSE T-CHART:</strong> Make a two-columned t-chart analyzing the goals of an individual. This can be any individual related to your topic: the author, a character, a historical figure, or even yourself. What goals is this individual attempting to accomplish? List these goals in the left-hand column. What strategies or techniques does the individual use (successfully or unsuccessfully) to accomplish each goal? List these on the right.<br><br><em>Reversed: motivated reasoning, confirmation bias, violence, madness</em>`
+            },
+            {
+                src: 'images/cards/9ElephantInTheRoomPrototypeBorder.png',
+                name: 'The Elephant',
+                subtitle: 'Uncomfortable Truths',
+                description: `<strong>TABOO TOPICS:</strong> Is there something about your topic that you or others are avoiding because it is socially unacceptable, inflammatory, or difficult to accept on a personal level? Free write about this issue frankly. Is there any value in addressing it directly or indirectly in your writing?<br><br><strong>DISCOMFORT:</strong> As you think about your subject, make a list of any aspects of it that trigger a twinge of physical discomfort (a pit in your stomach, a tensing of your shoulders, etc.) What triggers these physiological responses? How could focusing on these uncomfortable elements add interest and complexity to your writing?<br><br><em>Reversed: trolling, tactlessness, sensationalism, loss of balance and measure</em>`
+            },
+            {
+                src: 'images/cards/11TheJokerPrototypeBorder.png',
+                name: 'The Joker',
+                subtitle: 'Random Associations, Absurdity, Humor',
+                description: `<strong>AND NOW FOR SOMETHING COMPLETELY DIFFERENT:</strong> Choose three random words or phrases (e.g., "scrambled eggs," "Santa Clause" "underwear"). Write them down. Now, one at a time, brainstorm as many connections as possible between each of these words and your topic.<br><br><strong>ANALYZING HUMOR:</strong> Analyze the humor in your topic (irony, sarcasm, situational humor, word-play, etc.) How could incorporating this analysis add interest and depth to your writing?<br><br><strong>THE COMEDIAN'S DRAFT:</strong> Free-write about your subject as a stand-up comedian, a satirist, or other humorist. When you are done, look over your writing to see what ideas emerged from the process.<br><br><em>Reversed: absurdity, far-flung metaphors, triviality</em>`
+            },
+            {
+                src: 'images/cards/19TheActorPrototypeBorder.png',
+                name: 'The Actor',
+                subtitle: 'Points of View, Empathy, Character Analysis',
+                description: `<strong>SHOES:</strong> Imagine a character with a different perspective on your topic and walk in their shoes. Jot down notes about their views and what experiences led to these views. Alternatively, write a brief monologue on your topic from the perspective of your character or a dialogue between several characters.<br><br><strong>SHADES:</strong> Interpret your topic through an ideological lens of your choice. How would a feminist view it? A Marxist? A conservative? A historian? A psychologist? What is gained and lost from viewing your subject through this particular lens?<br><br><strong>CHARACTER ANALYSIS:</strong> Choose a character related to your topic. Analyze their physical and psychological traits, fears, desires, influences, relationships, and changes over time.<br><br><em>Reversed: detachment, moral paralysis, relativism</em>`
+            },
+            {
+                src: 'images/cards/23EchoesPrototypeBorder.png',
+                name: 'Echoes',
+                subtitle: 'Motif, Analogy, Repetition, Allusions',
+                description: `<strong>REPETITION:</strong> Make a list of aspects of your topic that repeat (e.g, imagery, symbolism, events, words). Do these repetitions reveal something interesting about your topic? Alternatively, explore how you could use repetition in your own writing.<br><br><strong>ANALOGIES:</strong> Compare an important aspect of your topic to something else—an object, event, place, person, experience, etc. If you are struggling, think about one of your passions (e.g., an academic subject, hobby, job). What parallels can you draw between this field and your topic?<br><br><strong>ALLUSIONS:</strong> How does your writing, or that which you're analyzing, consciously or unconsciously echo writing from the past (myth, religious texts, fairytales, literature, etc.)?<br><br><em>Reversed: monotony, tedium, cliché</em>`
+            },
+            {
+                src: 'images/cards/25FoundationsPrototypeBorder.png',
+                name: 'Foundations',
+                subtitle: 'Assumptions, Values, Premises',
+                description: `<strong>UNDERPINNING:</strong> Choose an argument—your own or one you are analyzing—and explore its assumptions. What must be true in order for your argument to be true? How can you support these assumptions with evidence and reasoning?<br><br><strong>BULLDOZE:</strong> Attack your own argument or one you are analyzing by revealing its flawed assumptions. Now build a new argument on sounder foundations.<br><br><strong>MORAL FRAMEWORKS:</strong> What moral beliefs underly your attitude toward your subject? What do you believe is good or bad, just or unjust, pure or corrupt? Alternatively, analyze the moral frameworks in the works or arguments you are analyzing. How do these frameworks align or conflict with your own?<br><br><em>Reversed: bias, flawed reasoning, lack of evidence</em>`
+            },
+            {
+                src: 'images/cards/28TheMechanicPrototypeBorder.png',
+                name: 'The Mechanic',
+                subtitle: 'Analysis, Systems Thinking, Cause & Effect, Parts & Wholes',
+                description: `<strong>CAUSE & EFFECT FLOWCHART:</strong> Think of your topic as a complex system or machine. Create a flow chart. Identify the important elements in the system and use arrows to illustrate the chain of cause and effect.<br><br><strong>STRUCTURE DIAGRAM:</strong> Sketch a map of a potential structure of your argument or narrative. Put a box around big ideas and a circle around supporting details and analysis, using lines to connect the supporting details to their big ideas. Number each boxed big idea to plan the sequence of your paragraphs. Alternatively, create a formal outline.<br><br><em>Reversed: reductive thinking, narrowmindedness</em>`
+            },
+            {
+                src: 'images/cards/33TheBoxPrototypeBorder.png',
+                name: 'The Box',
+                subtitle: 'Common Sense, Convention, Tradition',
+                description: `<strong>COMMON SENSE:</strong> Before thinking outside the box, try thinking in it. What do most people believe about your subject? Why might these attitudes have arisen in the first place? Do they contain wisdom?<br><br><strong>TRADITION:</strong> Explore your topic in the context of your cultural traditions or those of another culture, doing research if necessary. How did views evolve over time? What value did these beleifs have for the people who held them?<br><br><strong>OUTSIDE THE BOX:</strong> How can you subvert the reader's expectations? Examine popular beliefs people hold about your topic. What "obvious" or widely-held belief is wrong? Why?<br><br><em>Reversed: unexamined opinions, prejudice, narrow-mindedness, cliches</em>`
+            },
+            {
+                src: 'images/cards/40DeathPrototypeBorder.png',
+                name: 'Death',
+                subtitle: 'Focus, Concision, Loss',
+                description: `<strong>PRUNING:</strong> Clear away the dead growth. Select your three most interesting ideas. Transfer these to a fresh piece of paper. Cut everything else out. Now, continue to develop these ideas until you have a cohesive piece.<br><br><strong>LACONIC MODE:</strong> Choose an important part or passage of your writing. Write at least a paragraph, using as few words as possible to convey your ideas. Try a second version, reducing your word count still more. What did you gain and lose through this experiment in concision?<br><br><strong>DYING:</strong> In the context of your topic, explore any theme related to literal or figurative death (e.g., loss, grief, impermanence, immortality, new beginnings, etc.)<br><br><em>Reversed: narrow-mindedness, premature criticism, limited examples and exploration</em>`
+            },
+            {
+                src: 'images/cards/41MetamorphosisPrototypeBorder.png',
+                name: 'Metamorphosis',
+                subtitle: 'Change, Transformation, Transitions',
+                description: `<strong>TURNING POINT:</strong> Reflect on the topic or text you are analyzing, and look for a turning point. What changed? Why? Why is it significant? Alternatively, analyze a hypothetical future turning point that you either fear or would like to see become a reality.<br><br><strong>TRANSFORMATION:</strong> How could you take a radically different approach to your writing? Evaluate the merits of this approach, and if it appears better than your current tack, transform your vision.<br><br><strong>CHANGE:</strong> In the context of your topic, explore any theme related to change or its opposite (growth, adaption, circle of life, loss of innocence, fading beauty, progress, fear of change, stasis, permanence, stagnation, etc.)<br><br><em>Reversed: chaos, lack of commitment, weak transitions</em>`
+            },
+            {
+                src: 'images/cards/43TheCrownPrototypeBorder.png',
+                name: 'The Crown',
+                subtitle: 'Thesis, Theme, Requirements, Power',
+                description: `<strong>GUIDELINES:</strong> What external requirements govern your writing, either explicitly (a prompt, a rubric) or implicitly (social norms)? How can you satisfy these requirements while aligning your work with your own interests and values?<br><br><strong>THESIS OR THEME:</strong> Identify a governing idea for your writing. For analytical writing, generate a thesis: one sentence that summarizes your argument and is specific, debatable, and interesting. For narrative writing, determine your main theme: the larger message you will convey.<br><br><strong>POWER:</strong> In the context of your topic, explore any theme related to power (e.g., coercion, manipulation, government, corruption, law, strength, weakness, capability, ineptitude, etc.)<br><br><em>Reversed: incoherence, weak focus, aimlessness</em>`
+            }
+        ];
+
+        let isDrawing = false;
+        let hasDrawnCard = false;
+        let availableCards = [...allCards]; // Track undrawn cards
+        let currentCard = null; // Store currently drawn card
+
+        function initPickCard() {
+            const deckArea = document.getElementById('deckArea');
+            const drawAgainBtn = document.getElementById('drawAgainBtn');
+            const interpretBtn = document.getElementById('interpretBtn');
+
+            deckArea.addEventListener('click', drawCard);
+            drawAgainBtn.addEventListener('click', resetAndDraw);
+            interpretBtn.addEventListener('click', () => {
+                if (currentCard) {
+                    openModal(currentCard);
+                }
+            });
+        }
+
+        function drawCard() {
+            if (isDrawing) return;
+
+            // Check if any cards are left
+            if (availableCards.length === 0) {
+                alert('You have drawn all available cards! To test out all 43 cards, please sign up for a demo session below. The deck will now be reshuffled.');
+                availableCards = [...allCards];
+            }
+
+            isDrawing = true;
+
+            // Select random card from available cards
+            const randomIndex = Math.floor(Math.random() * availableCards.length);
+            const selectedCard = availableCards[randomIndex];
+
+            // Remove drawn card from available pool
+            availableCards.splice(randomIndex, 1);
+
+            // Get elements
+            const revealedCardWrapper = document.getElementById('revealedCard');
+            const cardName = document.getElementById('cardName');
+            const cardDescription = document.getElementById('cardDescription');
+            const interpretBtn = document.getElementById('interpretBtn');
+            const drawAgainBtn = document.getElementById('drawAgainBtn');
+
+            // Store current card
+            currentCard = selectedCard;
+
+            // Hide previous content
+            cardName.classList.remove('visible');
+            cardDescription.classList.remove('visible');
+            interpretBtn.classList.remove('visible');
+            drawAgainBtn.classList.remove('visible');
+
+            // Set up the card (start face down)
+            revealedCardWrapper.classList.remove('empty');
+            revealedCardWrapper.innerHTML = `
+                <div class="revealed-card-inner" id="revealedCardInner">
+                    <div class="revealed-card-front">
+                        <img src="${cardBack}" alt="Card Back">
+                    </div>
+                    <div class="revealed-card-back">
+                        <img src="${selectedCard.src}" alt="${selectedCard.name}">
+                    </div>
+                </div>
+            `;
+
+            // Flip the card after a brief delay
+            setTimeout(() => {
+                const cardInner = document.getElementById('revealedCardInner');
+                cardInner.classList.add('flipped');
+
+                // Show card name and buttons after flip
+                setTimeout(() => {
+                    cardName.innerHTML = `${selectedCard.name}<br><span style="font-size: 0.9rem; color: var(--gold); font-weight: 400;">${selectedCard.subtitle}</span>`;
+                    cardName.classList.add('visible');
+                    interpretBtn.classList.add('visible');
+                    drawAgainBtn.classList.add('visible');
+
+                    isDrawing = false;
+                    hasDrawnCard = true;
+                }, 800);
+            }, 300);
+        }
+
+        function resetAndDraw() {
+            if (isDrawing) return;
+
+            const revealedCardWrapper = document.getElementById('revealedCard');
+            const cardName = document.getElementById('cardName');
+            const cardDescription = document.getElementById('cardDescription');
+            const interpretBtn = document.getElementById('interpretBtn');
+            const drawAgainBtn = document.getElementById('drawAgainBtn');
+
+            // Hide everything
+            cardName.classList.remove('visible');
+            cardDescription.classList.remove('visible');
+            interpretBtn.classList.remove('visible');
+            drawAgainBtn.classList.remove('visible');
+
+            // Reset card area
+            revealedCardWrapper.classList.add('empty');
+            revealedCardWrapper.innerHTML = '<span class="empty-prompt">Drawing...</span>';
+
+            // Draw new card after brief delay
+            setTimeout(() => {
+                drawCard();
+            }, 300);
+        }
+
+        // ============ MODAL FUNCTIONS ============
+        function openModal(card) {
+            const modal = document.getElementById('cardModal');
+            const modalImage = document.getElementById('modalCardImage');
+            const modalName = document.getElementById('modalCardName');
+            const modalSubtitle = document.getElementById('modalCardSubtitle');
+            const modalDescription = document.getElementById('modalCardDescription');
+
+            // Set modal content
+            modalImage.src = card.src;
+            modalImage.alt = card.name;
+            modalName.textContent = card.name;
+            modalSubtitle.textContent = card.subtitle;
+            modalDescription.innerHTML = card.description;
+
+            // Show modal
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('cardModal');
+            modal.classList.remove('active');
+        }
+
+        // Initialize modal event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const modalClose = document.getElementById('modalClose');
+            const modal = document.getElementById('cardModal');
+
+            // Close button
+            modalClose.addEventListener('click', closeModal);
+
+            // Click outside modal to close
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Escape key to close
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        });
+
+        // ============ SIGNUP MODALS ============
+        function openSignupModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+        }
+
+        function closeSignupModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+        }
+
+        // Initialize signup modals
+        document.addEventListener('DOMContentLoaded', () => {
+            // Try Cards Modal
+            const tryCardsBtn = document.getElementById('tryCardsBtn');
+            const tryCardsModal = document.getElementById('tryCardsModal');
+            const tryCardsClose = document.getElementById('tryCardsClose');
+            const tryCardsForm = document.getElementById('tryCardsForm');
+            const tryCardsThankYou = document.getElementById('tryCardsThankYou');
+
+            tryCardsBtn.addEventListener('click', () => openSignupModal('tryCardsModal'));
+            tryCardsClose.addEventListener('click', () => {
+                closeSignupModal('tryCardsModal');
+                // Reset form after closing
+                setTimeout(() => {
+                    tryCardsForm.style.display = 'block';
+                    tryCardsThankYou.style.display = 'none';
+                    tryCardsForm.reset();
+                }, 300);
+            });
+
+            tryCardsModal.addEventListener('click', (e) => {
+                if (e.target === tryCardsModal) {
+                    closeSignupModal('tryCardsModal');
+                    setTimeout(() => {
+                        tryCardsForm.style.display = 'block';
+                        tryCardsThankYou.style.display = 'none';
+                        tryCardsForm.reset();
+                    }, 300);
+                }
+            });
+
+            // Handle form submission
+            tryCardsForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(tryCardsForm);
+
+                try {
+                    const response = await fetch(tryCardsForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        tryCardsForm.style.display = 'none';
+                        tryCardsThankYou.style.display = 'block';
+                    } else {
+                        alert('Oops! There was a problem submitting your form. Please try again.');
+                    }
+                } catch (error) {
+                    alert('Oops! There was a problem submitting your form. Please try again.');
+                }
+            });
+
+            // Waitlist Modal
+            const waitlistBtn = document.getElementById('waitlistBtn');
+            const waitlistModal = document.getElementById('waitlistModal');
+            const waitlistClose = document.getElementById('waitlistClose');
+            const waitlistForm = document.getElementById('waitlistForm');
+            const waitlistThankYou = document.getElementById('waitlistThankYou');
+
+            waitlistBtn.addEventListener('click', () => openSignupModal('waitlistModal'));
+            waitlistClose.addEventListener('click', () => {
+                closeSignupModal('waitlistModal');
+                setTimeout(() => {
+                    waitlistForm.style.display = 'block';
+                    waitlistThankYou.style.display = 'none';
+                    waitlistForm.reset();
+                }, 300);
+            });
+
+            waitlistModal.addEventListener('click', (e) => {
+                if (e.target === waitlistModal) {
+                    closeSignupModal('waitlistModal');
+                    setTimeout(() => {
+                        waitlistForm.style.display = 'block';
+                        waitlistThankYou.style.display = 'none';
+                        waitlistForm.reset();
+                    }, 300);
+                }
+            });
+
+            // Handle form submission
+            waitlistForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(waitlistForm);
+
+                try {
+                    const response = await fetch(waitlistForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        waitlistForm.style.display = 'none';
+                        waitlistThankYou.style.display = 'block';
+                    } else {
+                        alert('Oops! There was a problem submitting your form. Please try again.');
+                    }
+                } catch (error) {
+                    alert('Oops! There was a problem submitting your form. Please try again.');
+                }
+            });
+
+            // Close modals with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeSignupModal('tryCardsModal');
+                    closeSignupModal('waitlistModal');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
